@@ -1,3 +1,22 @@
+# Parses the crazy simulator format of stormpy to this:
+# [
+# [
+# (State, label, State),
+# (State, label, State),
+# (State, label, State),
+# ],
+# [
+# (State, label, State),
+# (State, label, State),
+# (State, label, State),
+# ],
+# [
+# (State, label, State),
+# (State, label, State),
+# (State, label, State),
+# ]
+# ]
+
 import json
 import re
 
