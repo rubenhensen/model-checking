@@ -1,3 +1,6 @@
 {
-    "image": "sjunges/stormpyter:lecture_radboud"
+	"image": "sjunges/stormpyter:lecture_radboud",
+	"extensions": [
+		"ms-python.python"
+	]
   }
