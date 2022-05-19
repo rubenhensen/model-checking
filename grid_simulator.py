@@ -10,7 +10,7 @@ import json
 """
 Simulator for nondeterministic models
 """
-def example_simulator_02():
+def grid_simulator(nr_traces, len_traces):
     # path = stormpy.examples.files.prism_mdp_maze
     path = "prism_models/grid_5x5.prism"
     prism_program = stormpy.parse_prism_program(path)
@@ -50,11 +50,11 @@ def example_simulator_02():
     simulator.set_action_mode(stormpy.simulator.SimulatorActionMode.GLOBAL_NAMES)
     # 5 paths of at most 50 steps.
     paths = []
-    for m in range(5):
+    for m in range(nr_traces):
         path = []
         state, reward, labels = simulator.restart()
         path = [f"{state}"]
-        for n in range(4):
+        for n in range(len_traces):
             actions = simulator.available_actions()
             select_action = random.randint(0,len(actions)-1)
             #print(f"Randomly select action nr: {select_action} from actions {actions}")
@@ -80,4 +80,4 @@ def example_simulator_02():
 
 
 if __name__ == '__main__':
-    example_simulator_02()
+    grid_simulator(5, 4)

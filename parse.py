@@ -25,8 +25,21 @@ class State:
         self.x = x
         self.y = y
 
+    def __eq__(self, other):
+        if isinstance(other, State):
+            return self.x == other.x and self.y == other.y
 
-def parseGridFile(file_path):
+        return False
+    def __repr__(self):
+        return f"State(x: {self.x}, y: {self.y})"
+
+    def __key(self):
+        return (self.x, self.y)
+
+    def __hash__(self):
+        return hash(self.__key())
+
+def grid_parse(file_path):
     file_text = ''
     with open(file_path, 'rt') as file_placeholder:
         lines = file_placeholder.readlines()
