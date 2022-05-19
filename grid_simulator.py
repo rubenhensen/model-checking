@@ -13,7 +13,7 @@ Simulator for nondeterministic models
 def example_simulator_02():
     # path = stormpy.examples.files.prism_mdp_maze
     path = "prism_models/grid_5x5.prism"
-    prism_program = stormpy.parse_prism_program(path)
+    prism_program = stormpy.parse_prism_program(path)  # type: ignore
 
     # model = stormpy.build_model(prism_program)
     # simulator = stormpy.simulator.create_simulator(model, seed=42)
