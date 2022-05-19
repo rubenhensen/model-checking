@@ -28,8 +28,19 @@ class State:
     def __eq__(self, other):
         if isinstance(other, State):
             return self.x == other.x and self.y == other.y
-
         return False
+    
+    def __lt__(self, other):
+        if isinstance(other, State):
+            if self.x == other.x:
+                return self.y < other.y
+            if self.x > other.x:
+                return False
+            if self.x < other.x:
+                return True 
+        return False
+        
+
     def __repr__(self):
         return f"State(x: {self.x}, y: {self.y})"
 
