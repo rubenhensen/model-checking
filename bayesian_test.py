@@ -1,9 +1,9 @@
 from grid_simulator import grid_simulator
-from parse import grid_parse
+from parse2 import grid_parse
 
 def bayesian_iter(traces):
     # Get all unique visited transitions using set comprehension
-    transitions = {(state1, state2) for (state1, label, state2) in [item for sublist in traces for item in sublist]}
+    transitions = {(state1, state2) for (state1, state2) in [item for sublist in traces for item in sublist]}
 
     alphas = dict()
     prior = 2
@@ -24,7 +24,7 @@ def bayesian_iter(traces):
 
 
 def run_bayesian(trace, alphas):
-    for (state1, label, state2) in trace:
+    for (state1, state2) in trace:
         alphas[state1][state2] += 1
 
     return alphas
@@ -45,7 +45,7 @@ def calculate_probability(target_state, target_states):
     return probability
 
 def main():
-    traces = grid_parse("export_simulator.txt")
+    coupled, traces = grid_parse("export_simulator.txt")
     bayesian_iter(traces)
 
 if __name__ == "__main__":

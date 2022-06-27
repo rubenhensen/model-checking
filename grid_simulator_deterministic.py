@@ -2,6 +2,7 @@ import stormpy
 import stormpy.core
 import stormpy.simulator
 
+import pprint
 import stormpy.examples
 import stormpy.examples.files
 import random
@@ -12,17 +13,42 @@ Simulator for nondeterministic models
 """
 def grid_simulator_deterministic(nr_traces, len_traces):
     path = "prism_models/grid_5x5_coupled.prism"
-    prism_program = stormpy.parse_prism_program(path)  # type: ignore
-    prism_program = stormpy.preprocess_symbolic_input(prism_program, [], "p=0.5,q=0.33,r=0.33,s=0.25,t=0.25,v=0.25")[0].as_prism_program()
+    prism_program1 = stormpy.parse_prism_program(path)  # type: ignore
+    prism_program = stormpy.preprocess_symbolic_input(prism_program1, [], "p=0.5,q=0.33,r=0.33,s=0.25,t=0.25,v=0.25")[0].as_prism_program()
 
     options = stormpy.BuilderOptions()
     options.set_build_state_valuations()
     options.set_build_choice_labels(True)
     # parameters = model.collect_probability_parameters()
     model = stormpy.build_sparse_model_with_options(prism_program, options)
+    model2 = stormpy.build_sparse_parametric_model_with_options(prism_program1, options)
+
+    coupled_transitions = {}
 
     print(model)
+    print("model2#####################################################################")
+    print(model2)
+    for state in model2.states:
+        for action in state.actions:
+            for transition in action.transitions:
+                probability = str(transition.value())
+
+                if probability.isnumeric():
+                    continue
+
+                # Only add if contains parameter
+                if probability not in coupled_transitions:
+                    coupled_transitions[probability] = []
+
+                coupled_transitions[probability].append((int(state), transition.column))
+                # print("From state {}, with probability {}, go to state {}".format(state, transition.value(), transition.column))
+                # print(f"{coupled_transitions}")
     
+    
+    # print(f"{coupled_transitions}")
+
+
+
     simulator = stormpy.simulator.create_simulator(model, seed=42)
     simulator.set_observation_mode(stormpy.simulator.SimulatorObservationMode.PROGRAM_LEVEL)
     simulator.set_action_mode(stormpy.simulator.SimulatorActionMode.GLOBAL_NAMES)
@@ -36,7 +62,6 @@ def grid_simulator_deterministic(nr_traces, len_traces):
             actions = simulator.available_actions()
             select_action = random.randint(0,len(actions)-1)
             #print(f"Randomly select action nr: {select_action} from actions {actions}")
-            path.append(f"--act={actions[select_action]}-->")
             state, reward, labels = simulator.step(actions[select_action])
             # print(state.dict)
             
@@ -46,9 +71,14 @@ def grid_simulator_deterministic(nr_traces, len_traces):
                 break
         paths.append(path)
 
+
+    jsonobj = {
+        "coupled": list(coupled_transitions.values()),
+        "paths": paths
+    }
     # dump the dict contents using json 
     with open("export_simulator.txt", 'w') as outfile:
-        json.dump(paths, outfile, indent=4, separators=(',', ':'))
+        json.dump(jsonobj, outfile, indent=4, separators=(',', ':'))
 
 
 if __name__ == '__main__':
