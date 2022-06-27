@@ -9,3 +9,4 @@ module main
    [south] y > 1 -> 1:(y'=y-1);
    [north] y < 4 -> 1:(y'=y+1);
 endmodule
+ 
