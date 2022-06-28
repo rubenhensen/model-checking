@@ -72,6 +72,8 @@ def grid_simulator_deterministic(nr_traces, len_traces):
     with open("export_simulator.txt", 'w') as outfile:
         json.dump(jsonobj, outfile, indent=4, separators=(',', ':'))
 
+    return prism_program
+
 
 if __name__ == '__main__':
     grid_simulator_deterministic(5, 4)

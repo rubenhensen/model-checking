@@ -38,7 +38,7 @@ def generate_model(model):
     state_labeling.add_label('init')
     state_labeling.add_label('deadlock')
 
-    state_labeling.add_label_to_state('a', 24)
+    state_labeling.add_label_to_state('a', 1)
     state_labeling.add_label_to_state('init', 0)
 
     #build sparse model
