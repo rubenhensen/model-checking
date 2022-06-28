@@ -18,7 +18,7 @@ def create_transitions(model):
     
     return transitions
 
-def generate_model(model, nr_of_states):
+def generate_model(model):
     builder = stormpy.SparseMatrixBuilder(rows = 0, columns = 0, entries = 0, force_dimensions = False, has_custom_row_grouping = False)
     
     #create transitions 
@@ -32,7 +32,7 @@ def generate_model(model, nr_of_states):
     transition_matrix = builder.build()
 
     #create state labels
-    state_labeling = stormpy.storage.StateLabeling(nr_of_states)
+    state_labeling = stormpy.storage.StateLabeling(len(transition_matrix))
 
     #build sparse model
     components = stormpy.SparseModelComponents(transition_matrix=transition_matrix, state_labeling=state_labeling)
