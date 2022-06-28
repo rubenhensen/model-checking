@@ -18,4 +18,5 @@ def frequentist(obj):
         #State(x: 0, y: 4) 0.49 --> State(x: 0, y: 3)
         print(f"{a[0]} {round(approx[a], 2)} --> {str(a[1])}")
 
+    return approx
 
