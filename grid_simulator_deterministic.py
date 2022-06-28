@@ -24,14 +24,14 @@ def grid_simulator_deterministic(nr_traces, len_traces):
     model2 = stormpy.build_sparse_parametric_model_with_options(prism_program1, options)
 
     coupled_transitions = {}
-
+    print("model")
     print(model)
-    print("model2#####################################################################")
+    print("model2")
     print(model2)
     for state in model2.states:
         for action in state.actions:
             for transition in action.transitions:
-                probability = str(transition.value)
+                probability = str(transition.value())
 
                 if probability.isnumeric():
                     continue
