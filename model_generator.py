@@ -8,8 +8,8 @@ def create_transitions(model):
 
     for a in model:
         #print(f"{str(a[0])[6:len(str(a[0])) -1]}, {str(a[1])[6:len(str(a[1])) -1]}, {round(model[a], 2)}")
-        source_state = str(a[0])[6:len(str(a[0])) -1]
-        target_state = str(a[1])[6:len(str(a[1])) -1]
+        source_state = a[0].state
+        target_state = a[1].state
         probability = round(model[a], 2)
 
         transitions.append(
@@ -30,6 +30,7 @@ def generate_model(model):
         builder.add_next_value(row = transition.source, column = transition.target, value = transition.probability)
 
     transition_matrix = builder.build()
+    print(transition_matrix)
 
     #create state labels
     state_labeling = stormpy.storage.StateLabeling(len(transition_matrix))
