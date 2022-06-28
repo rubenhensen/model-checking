@@ -7,5 +7,5 @@ grid_simulator_deterministic(10, 50) # Writes to file, uncomment to generate new
 (coupled, traces) = grid_parse("export_simulator.txt") 
 print(coupled)
 approx = frequentist((coupled, traces))
-generate_model(approx, 25)
+generate_model(approx)
 
