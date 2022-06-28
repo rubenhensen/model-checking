@@ -30,7 +30,6 @@ def generate_model(model):
         builder.add_next_value(row = transition.source, column = transition.target, value = transition.probability)
 
     transition_matrix = builder.build()
-    print(transition_matrix)
 
     #create state labels
     state_labeling = stormpy.storage.StateLabeling(len(transition_matrix))

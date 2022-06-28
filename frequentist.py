@@ -1,7 +1,6 @@
 from parse import grid_parse
 import collections
-def frequentist(obj):
-    coupled,traces = obj
+def frequentist(traces):
     flat_list = [item for sublist in traces for item in sublist]    # Create a flat list out of multiple traces. [[],[],[]] -> []
     states = {state1 for (state1, state2) in flat_list}      # get all unique visited states using set comprehension
     nr_total_samples = collections.Counter(state1 for (state1, state2) in flat_list) # For every state, calculate the amount of times a state is a starting state in the traces.
