@@ -1,5 +1,5 @@
 from grid_simulator import grid_simulator
-from parse2 import grid_parse
+from parse import grid_parse
 
 def bayesian_iter(traces):
     # Get all unique visited transitions using set comprehension
