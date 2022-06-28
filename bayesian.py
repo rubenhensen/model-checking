@@ -1,5 +1,5 @@
 from grid_simulator_deterministic import grid_simulator_deterministic
-from parse import grid_parse
+from parse import grid_parse, State
 
 def bayesian_iter(coupled, traces):
     print(coupled)
@@ -17,7 +17,7 @@ def bayesian_iter(coupled, traces):
         alphas[source][target] = prior
 
     for i, trace in enumerate(traces):
-        alphas = run_bayesian(trace, alphas, coupled)
+        alphas = run_bayesian(trace, alphas, coupled, prior)
 
         print(f"Probabilities after iteration {i}")
         for (source_state, target) in alphas.items():
@@ -26,18 +26,31 @@ def bayesian_iter(coupled, traces):
                 print(f"{source_state} {round(p, 2)} --> {target_state}")
 
 
-def run_bayesian(trace, alphas, coupled):
+def run_bayesian(trace, alphas, coupled, prior):
     for (state1, state2) in trace:
         alphas[state1][state2] += 1
 
-        for c in coupled:
-            print(f"Checking if {[state1.state, state2.state]} in {c}")
-            if [state1.state, state2.state] in c:
-                print(f"Matching c {c}")
-                for l in c:
-                    if l[0] == state1.state and l[1] == state2.state:
+        source = int(state1.state)
+        target = int(state2.state)
+
+        t = [source, target]
+
+        for couples in coupled:
+            if t in couples:
+                for transition in couples:
+                    if transition == [source, target]:
                         continue
-                    alphas[l[0]][l[1]] += 1
+
+                    coupled_source = State(transition[0])
+                    coupled_target = State(transition[1])
+
+                    if not coupled_source in alphas:
+                        alphas[coupled_source] = {}
+
+                    if not coupled_target in alphas[coupled_source]:
+                        alphas[coupled_source][coupled_target] = prior
+
+                    alphas[coupled_source][coupled_target] += 1
 
     return alphas
 
