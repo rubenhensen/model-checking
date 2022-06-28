@@ -30,10 +30,11 @@ def bayesian_iter(coupled, traces):
     for (source_state, target) in alphas.items():
         for (target_state, alpha) in target.items():
             #print(f"Source: {source_state} Target: {target}")
-            approx.update({(source_state, target_state):round(calculate_probability(target_state, target), 2)})
 
+            for prob,couples in coupled.items():
+                if prob not in approx and [source_state, target_state] in couples:
+                    approx[prob] = round(calculate_probability(target_state, target), 2)
 
-    #print(approx)
     return approx
 
 def run_bayesian(trace, alphas, coupled, prior):
@@ -45,7 +46,7 @@ def run_bayesian(trace, alphas, coupled, prior):
 
         t = [source, target]
 
-        for couples in coupled:
+        for couples in coupled.values():
             if t in couples:
                 for transition in couples:
                     if transition == [source, target]:
@@ -80,11 +81,11 @@ def calculate_probability(target_state, target_states):
     return probability
 
 def main():
-    grid_simulator_deterministic(2, 5)
+    grid_simulator_deterministic(10, 5)
     coupled, traces = grid_parse("export_simulator.txt")
     approx = bayesian_iter(coupled, traces)
-    for a in approx:
-        print(f"{a[0]} {round(approx[a], 2)} --> {str(a[1])}")
+    for (transition_label, value) in approx.items():
+        print(f"{transition_label}: {value}")
 
 if __name__ == "__main__":
     main()

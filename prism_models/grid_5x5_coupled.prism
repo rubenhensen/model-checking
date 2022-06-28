@@ -1,4 +1,4 @@
-mdp
+dtmc
 
 // Corner states (e.g. x=0 & y=0)
 const double p;
@@ -46,3 +46,7 @@ module main
 
 endmodule
 
+// x1 y0 = state 1
+label "b" = x=1&y=0;
+// x0 y1 = state 5
+label "a" = x=0&y=1;

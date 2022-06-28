@@ -32,6 +32,7 @@ def grid_simulator_deterministic(nr_traces, len_traces):
         for action in state.actions:
             for transition in action.transitions:
                 probability = str(transition.value())
+                # print(probability)
 
                 if probability.isnumeric():
                     continue
@@ -44,7 +45,7 @@ def grid_simulator_deterministic(nr_traces, len_traces):
 
     simulator = stormpy.simulator.create_simulator(model, seed=42)
     simulator.set_observation_mode(stormpy.simulator.SimulatorObservationMode.STATE_LEVEL)
-    simulator.set_action_mode(stormpy.simulator.SimulatorActionMode.GLOBAL_NAMES)
+    # simulator.set_action_mode(stormpy.simulator.SimulatorActionMode.GLOBAL_NAMES)
     # 5 paths of at most 50 steps.
     paths = []
     for m in range(nr_traces):
@@ -52,9 +53,10 @@ def grid_simulator_deterministic(nr_traces, len_traces):
         state, reward, labels = simulator.restart()
         path = [f"{state}"]
         for n in range(len_traces):
-            actions = simulator.available_actions()
-            select_action = random.randint(0,len(actions)-1)
-            state, reward, labels = simulator.step(actions[select_action])
+            # actions = simulator.available_actions()
+            # select_action = random.randint(0,len(actions)-1)
+            # state, reward, labels = simulator.step(actions[select_action])
+            state, reward, labels = simulator.step()
 
             
             path.append(f"{state}")
@@ -65,7 +67,7 @@ def grid_simulator_deterministic(nr_traces, len_traces):
 
 
     jsonobj = {
-        "coupled": list(coupled_transitions.values()),
+        "coupled": coupled_transitions,
         "paths": paths
     }
     # dump the dict contents using json 
