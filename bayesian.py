@@ -81,7 +81,7 @@ def calculate_probability(target_state, target_states):
     return probability
 
 def main():
-    grid_simulator_deterministic(10, 5)
+    grid_simulator_deterministic(10, 50)
     coupled, traces = grid_parse("export_simulator.txt")
     approx = bayesian_iter(coupled, traces)
     for (transition_label, value) in approx.items():
