@@ -1,7 +1,6 @@
 from parse import grid_parse
 import collections
-def frequentist_coupled(obj):
-    coupled,traces = obj
+def frequentist_coupled(coupled,traces):
     flat_list = [(st1,st2) for sublist in traces for (st1, st2) in sublist]    # Create a flat list out of multiple traces. [[],[],[]] -> []
     states = {state1 for (state1, state2) in flat_list}      # get all unique visited states using set comprehension
 
