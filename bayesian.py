@@ -1,5 +1,5 @@
 from grid_simulator_deterministic import grid_simulator_deterministic
-from parse import grid_parse, State
+from parse import grid_parse
 
 def bayesian_iter(coupled, traces):
     #print(coupled)
@@ -40,8 +40,8 @@ def run_bayesian(trace, alphas, coupled, prior):
     for (state1, state2) in trace:
         alphas[state1][state2] += 1
 
-        source = int(state1.state)
-        target = int(state2.state)
+        source = state1
+        target = state2
 
         t = [source, target]
 
@@ -51,8 +51,8 @@ def run_bayesian(trace, alphas, coupled, prior):
                     if transition == [source, target]:
                         continue
 
-                    coupled_source = State(transition[0])
-                    coupled_target = State(transition[1])
+                    coupled_source = transition[0]
+                    coupled_target = transition[1]
 
                     if not coupled_source in alphas:
                         alphas[coupled_source] = {}
