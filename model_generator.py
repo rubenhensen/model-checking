@@ -8,12 +8,12 @@ def create_transitions(model):
 
     for a in model:
         #print(f"{str(a[0])[6:len(str(a[0])) -1]}, {str(a[1])[6:len(str(a[1])) -1]}, {round(model[a], 2)}")
-        source_state = a[0].state
-        target_state = a[1].state
+        source_state = a[0]
+        target_state = a[1]
         probability = round(model[a], 2)
 
         transitions.append(
-            Transition(int(source_state), int(target_state), probability)
+            Transition(source_state, target_state, probability)
         )
     
     return transitions
@@ -41,4 +41,4 @@ def generate_model(model):
     #build dtmc
     dtmc = stormpy.storage.SparseDtmc(components)
 
-    print(dtmc)
+    return dtmc
