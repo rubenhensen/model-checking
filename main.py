@@ -35,13 +35,15 @@ def reachability_probability(dtmc):
 # print(f"Result original model: {original_result}")
 
 (coupled, traces) = grid_parse("export_simulator.txt") 
-
-approx0 = frequentist(traces)
+# print(coupled)
+# approx0 = frequentist(traces)
 approx1 = frequentist_coupled(coupled, traces)
-approx2 = bayesian_iter([], traces)
-approx3 = bayesian_iter(coupled, traces)
+# approx2 = bayesian_iter([], traces)
+# approx3 = bayesian_iter(coupled, traces)
 
-print(f"Frequentist: {formula_str} {reachability_probability(generate_model(approx0))}")
-print(f"Frequentist coupled: {formula_str} {reachability_probability(generate_model(approx1))}")
-print(f"Bayesian: {formula_str} {reachability_probability(generate_model(approx2))}")
-print(f"Bayesian coupled: {formula_str} {reachability_probability(generate_model(approx3))}")
+print(approx1)
+
+# print(f"Frequentist: {formula_str} {reachability_probability(generate_model(approx0))}")
+# print(f"Frequentist coupled: {formula_str} {reachability_probability(generate_model(approx1))}")
+# print(f"Bayesian: {formula_str} {reachability_probability(generate_model(approx2))}")
+# print(f"Bayesian coupled: {formula_str} {reachability_probability(generate_model(approx3))}")

@@ -11,16 +11,18 @@ def frequentist_coupled(coupled,traces):
     nr_transitions = collections.Counter((state1, state2) for (state1, state2) in flat_list) # For every transition, calculate the amount of time that transition is taken in the traces.
     # print(nr_transitions)
     coupled_summed = []
+    
     for l in coupled:
+        # print(coupled[l])
         sum_trans = 0
         sum_states = 0
         
-        for trans in l:
+        for trans in coupled[l]:
             # print(trans)
             sum_trans = sum_trans + nr_transitions[(trans[0],trans[1])]
             sum_states = sum_states + nr_total_samples[trans[0]]
 
-        coupled_summed.append((sum_states,sum_trans))
+        coupled_summed.append((l, sum_states,sum_trans))
 
     # print(coupled_summed)
     approx = {}
@@ -28,12 +30,11 @@ def frequentist_coupled(coupled,traces):
 
     for i, l in enumerate(coupled):
         for trans in l:
-            probability = coupled_summed[i][1] / coupled_summed[i][0]
-            approx.update({(trans[0],trans[1]):probability})
+            probability = round(coupled_summed[i][2] / coupled_summed[i][1],2)
+            approx.update({l:probability})
     
-    for a in approx:
-        #State(x: 0, y: 4) 0.49 --> State(x: 0, y: 3)
-        print(f"{a[0]} {round(approx[a], 2)} --> {str(a[1])}")
+    # for a in approx:
+    #     #State(x: 0, y: 4) 0.49 --> State(x: 0, y: 3)
+    #     print(f"{a[0]} {round(approx[a], 2)} --> {str(a[1])}")
 
     return approx
-
