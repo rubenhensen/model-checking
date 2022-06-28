@@ -34,6 +34,13 @@ def generate_model(model):
     #create state labels
     state_labeling = stormpy.storage.StateLabeling(len(transition_matrix))
 
+    state_labeling.add_label('a')
+    state_labeling.add_label('init')
+    state_labeling.add_label('deadlock')
+
+    state_labeling.add_label_to_state('a', 24)
+    state_labeling.add_label_to_state('init', 0)
+
     #build sparse model
     components = stormpy.SparseModelComponents(transition_matrix=transition_matrix, state_labeling=state_labeling)
 
