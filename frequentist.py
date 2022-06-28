@@ -14,8 +14,10 @@ def frequentist(obj):
         probability = nr_trans / nr_total
         approx.update({(st1, st2):probability})
     
-    for a in approx:
-        #State(x: 0, y: 4) 0.49 --> State(x: 0, y: 3)
-        print(f"{a[0]} {round(approx[a], 2)} --> {str(a[1])}")
+    #for a in approx:
+    #    #State(x: 0, y: 4) 0.49 --> State(x: 0, y: 3)
+    #    print(f"{a[0]} {round(approx[a], 2)} --> {str(a[1])}")
+    
+    return approx
 
 
