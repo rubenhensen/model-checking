@@ -41,16 +41,9 @@ def grid_simulator_deterministic(nr_traces, len_traces):
                     coupled_transitions[probability] = []
 
                 coupled_transitions[probability].append((int(state), transition.column))
-                # print("From state {}, with probability {}, go to state {}".format(state, transition.value(), transition.column))
-                # print(f"{coupled_transitions}")
-    
-    
-    # print(f"{coupled_transitions}")
-
-
 
     simulator = stormpy.simulator.create_simulator(model, seed=42)
-    simulator.set_observation_mode(stormpy.simulator.SimulatorObservationMode.PROGRAM_LEVEL)
+    simulator.set_observation_mode(stormpy.simulator.SimulatorObservationMode.STATE_LEVEL)
     simulator.set_action_mode(stormpy.simulator.SimulatorActionMode.GLOBAL_NAMES)
     # 5 paths of at most 50 steps.
     paths = []
@@ -61,9 +54,8 @@ def grid_simulator_deterministic(nr_traces, len_traces):
         for n in range(len_traces):
             actions = simulator.available_actions()
             select_action = random.randint(0,len(actions)-1)
-            #print(f"Randomly select action nr: {select_action} from actions {actions}")
             state, reward, labels = simulator.step(actions[select_action])
-            # print(state.dict)
+
             
             path.append(f"{state}")
             if simulator.is_done():
