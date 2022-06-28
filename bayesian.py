@@ -2,8 +2,8 @@ from grid_simulator_deterministic import grid_simulator_deterministic
 from parse import grid_parse, State
 
 def bayesian_iter(coupled, traces):
-    print(coupled)
-    print(traces)
+    #print(coupled)
+    #print(traces)
 
     # Get all unique visited transitions using set comprehension
     transitions = {(state1, state2) for (state1, state2) in [item for sublist in traces for item in sublist]}
@@ -19,12 +19,22 @@ def bayesian_iter(coupled, traces):
     for i, trace in enumerate(traces):
         alphas = run_bayesian(trace, alphas, coupled, prior)
 
-        print(f"Probabilities after iteration {i}")
+        #print(f"Probabilities after iteration {i}")
         for (source_state, target) in alphas.items():
             for (target_state, alpha) in target.items():
                 p = calculate_probability(target_state, target)
-                print(f"{source_state} {round(p, 2)} --> {target_state}")
+                #print(f"{source_state} {round(p, 2)} --> {target_state}")
 
+    approx = {}
+
+    for (source_state, target) in alphas.items():
+        for (target_state, alpha) in target.items():
+            #print(f"Source: {source_state} Target: {target}")
+            approx.update({(source_state, target_state):round(calculate_probability(target_state, target), 2)})
+
+
+    #print(approx)
+    return approx
 
 def run_bayesian(trace, alphas, coupled, prior):
     for (state1, state2) in trace:
@@ -72,7 +82,9 @@ def calculate_probability(target_state, target_states):
 def main():
     grid_simulator_deterministic(2, 5)
     coupled, traces = grid_parse("export_simulator.txt")
-    bayesian_iter(coupled, traces)
+    approx = bayesian_iter(coupled, traces)
+    for a in approx:
+        print(f"{a[0]} {round(approx[a], 2)} --> {str(a[1])}")
 
 if __name__ == "__main__":
     main()
