@@ -1,5 +1,5 @@
-from grid_simulator import grid_simulator
-from parse2 import grid_parse
+from grid_simulator_deterministic import grid_simulator_deterministic
+from parse import grid_parse
 
 def bayesian_iter(traces):
     # Get all unique visited transitions using set comprehension
@@ -45,6 +45,7 @@ def calculate_probability(target_state, target_states):
     return probability
 
 def main():
+    grid_simulator_deterministic(10, 500) 
     coupled, traces = grid_parse("export_simulator.txt")
     bayesian_iter(traces)
 

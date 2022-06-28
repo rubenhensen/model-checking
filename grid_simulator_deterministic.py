@@ -31,7 +31,7 @@ def grid_simulator_deterministic(nr_traces, len_traces):
     for state in model2.states:
         for action in state.actions:
             for transition in action.transitions:
-                probability = str(transition.value())
+                probability = str(transition.value)
 
                 if probability.isnumeric():
                     continue
