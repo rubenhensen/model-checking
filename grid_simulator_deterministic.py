@@ -15,8 +15,12 @@ Simulator for nondeterministic models
 def grid_simulator_deterministic(nr_traces, len_traces, path):
     prism_program1 = stormpy.parse_prism_program(path)  # type: ignore
     valuation = "bg=0.5,az=0.5,h=0.5,a=0.5,bf=0.333,be=0.333,bd=0.333,bc=0.333,bb=0.333,ba=0.333,aw=0.333,av=0.333,al=0.333,ak=0.333,aj=0.333,ai=0.333,w=0.333,v=0.333,u=0.333,t=0.333,j=0.333,i=0.333,g=0.333,f=0.333,e=0.333,d=0.333,c=0.333,b=0.333,au=0.25,at=0.25,as=0.25,ar=0.25,aq=0.25,ap=0.25,ao=0.25,an=0.25,am=0.25,ah=0.25,ag=0.25,af=0.25,ae=0.25,ad=0.25,ac=0.25,ab=0.25,aa=0.25,z=0.25,s=0.25,r=0.25,q=0.25,p=0.25,o=0.25,n=0.25,m=0.25,l=0.25,k=0.25"
-    # valuation for 5x5_coupled prism model
-    # valuation = "p=0.5,q=0.33,r=0.33,s=0.25,t=0.25,v=0.25"
+    
+    if (path == "prism_models/grid_5x5_coupled.prism") {
+        # valuation for 5x5_coupled prism model
+        valuation = "p=0.5,q=0.33,r=0.33,s=0.25,t=0.25,v=0.25"
+    }
+    
     valuations = valuation.split(",")
     expression = r'([a-z]+)'
     regex = re.compile(expression)
