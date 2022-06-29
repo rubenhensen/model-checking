@@ -7,14 +7,23 @@ from model_generator import generate_model, generate_model2
 from bayesian import bayesian_iter
 import stormpy
 import sys
+import argparse
+from enum import Enum
 
-def run(use_coupled, trace_length, nr_of_traces, reachability_predicate = 'P=? [X "a"]'):
+class LearningMethod(Enum):
+    frequentist = 'frequentist'
+    bayesian = 'bayesian'
+
+    def __str__(self):
+        return self.value
+
+def run(use_coupled, learningMethod, trace_length, nr_of_traces, reachability_predicate):
     prism_file_path = "prism_models/grid_5x5.prism"
 
-    if bool(use_coupled):
+    if use_coupled:
         prism_file_path = "prism_models/grid_5x5_coupled.prism"
 
-    (original_prism_program, transitions) = grid_simulator_deterministic(int(nr_of_traces), int(trace_length), prism_file_path) # Writes to file, uncomment to generate new file
+    (original_prism_program, transitions) = grid_simulator_deterministic(nr_of_traces, trace_length, prism_file_path) # Writes to file, uncomment to generate new file
 
     # Calculate eachability probability on original model
     original_properties = stormpy.parse_properties(reachability_predicate, original_prism_program)
@@ -28,13 +37,17 @@ def run(use_coupled, trace_length, nr_of_traces, reachability_predicate = 'P=? [
     # calculate reachability probability on approximated model using useer defined configuration
     (variables, coupled, traces) = grid_parse("export_simulator.txt") 
 
-    # approx0 = frequentist(traces)
-    approx1 = frequentist_coupled(coupled, traces)
-    print(approx1)
-    # approx2 = bayesian_iter([], traces)
-    # approx3 = bayesian_iter(coupled, traces, transitions)
-
-    print(f"Bayesian coupled: {reachability_predicate} {reachability_probability(generate_model2(approx1, prism_file_path, variables), reachability_predicate)}")
+    if learningMethod == LearningMethod.frequentist:
+        method_type = "Frequentist coupled" if use_coupled else "Frequentist non-coupled"
+        approx = frequentist_coupled(coupled, traces)
+        print(approx)
+        print(f"{method_type}: {reachability_predicate} {reachability_probability(generate_model2(approx, prism_file_path, variables), reachability_predicate)}")
+    
+    elif learningMethod == LearningMethod.bayesian:
+        method_type = "Bayesian coupled" if use_coupled else "Bayesian non-coupled"
+        approx = bayesian_iter(coupled, traces, transitions)
+        print(approx)
+        print(f"{method_type}: {reachability_predicate} {reachability_probability(generate_model2(approx, prism_file_path, variables), reachability_predicate)}")
 
 # Return the result of checking the formula string reachability
 def reachability_probability(dtmc, reachability_predicate):
@@ -47,5 +60,14 @@ def reachability_probability(dtmc, reachability_predicate):
     return result
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Probability learner for DTMC')
+    parser.add_argument('--coupled', type=bool, help='Use the grid world model with coupled transitions', default=False, required=False)
+    parser.add_argument('--learning_method', type=LearningMethod, help='The learning method to be used for approximating the transition probabilities', default=LearningMethod.bayesian, required=False, choices=list(LearningMethod))
+    parser.add_argument('--nr_of_traces', type=int, help='an integer for the number of traces created by the simulator', default=10, required=False)
+    parser.add_argument('--trace_length', type=int, help='an integer for the length of traces created by the simulator', default=50, required=False)
+    parser.add_argument('--reachability_formula', type=str, help='The reachability formula', default='P=? [X "a"]', required=False)
+
+    args = vars(parser.parse_args())
+
     # Map command line arguments to function arguments.
-    run(*sys.argv[1:])
+    run(*args.values())
