@@ -1,9 +1,8 @@
 from grid_simulator_deterministic import grid_simulator_deterministic
 from parse import grid_parse
-from frequentist import frequentist
 from frequentist_coupled import frequentist_coupled
 from bayesian import bayesian_iter
-from model_generator import generate_model, generate_model2
+from model_generator import generate_model
 from bayesian import bayesian_iter
 import stormpy
 import sys
@@ -41,13 +40,13 @@ def run(use_coupled, learningMethod, trace_length, nr_of_traces, reachability_pr
         method_type = "Frequentist coupled" if use_coupled else "Frequentist non-coupled"
         approx = frequentist_coupled(coupled, traces)
         print(approx)
-        print(f"{method_type}: {reachability_predicate} {reachability_probability(generate_model2(approx, prism_file_path, variables), reachability_predicate)}")
+        print(f"{method_type}: {reachability_predicate} {reachability_probability(generate_model(approx, prism_file_path, variables), reachability_predicate)}")
     
     elif learningMethod == LearningMethod.bayesian:
         method_type = "Bayesian coupled" if use_coupled else "Bayesian non-coupled"
         approx = bayesian_iter(coupled, traces, transitions)
         print(approx)
-        print(f"{method_type}: {reachability_predicate} {reachability_probability(generate_model2(approx, prism_file_path, variables), reachability_predicate)}")
+        print(f"{method_type}: {reachability_predicate} {reachability_probability(generate_model(approx, prism_file_path, variables), reachability_predicate)}")
 
 # Return the result of checking the formula string reachability
 def reachability_probability(dtmc, reachability_predicate):
