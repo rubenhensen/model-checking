@@ -16,7 +16,7 @@ class LearningMethod(Enum):
     def __str__(self):
         return self.value
 
-def run(use_coupled, learningMethod, trace_length, nr_of_traces, reachability_predicate):
+def run(use_coupled, learningMethod, nr_of_traces, trace_length, reachability_predicate):
     prism_file_path = "prism_models/grid_5x5.prism"
 
     if use_coupled:
@@ -25,7 +25,7 @@ def run(use_coupled, learningMethod, trace_length, nr_of_traces, reachability_pr
     (original_prism_program, transitions) = grid_simulator_deterministic(nr_of_traces, trace_length, prism_file_path) # Writes to file, uncomment to generate new file
 
     # Calculate eachability probability on original model
-    original_properties = stormpy.parse_properties(reachability_predicate, original_prism_program)
+    original_properties = stormpy.parse_properties(reachability_predicate)
     original_model = stormpy.build_symbolic_model(original_prism_program, original_properties)
     original_result = stormpy.model_checking(original_model,original_properties[0])
     original_filter = stormpy.create_filter_initial_states_symbolic(original_model)
@@ -58,15 +58,22 @@ def reachability_probability(dtmc, reachability_predicate):
 
     return result
 
+def boolean_string(s):
+    if s not in {'False', 'True'}:
+        raise ValueError('Not a valid boolean string')
+    return s == 'True'
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Probability learner for DTMC')
-    parser.add_argument('--coupled', type=bool, help='Use the grid world model with coupled transitions', default=False, required=False)
+    parser.add_argument('--coupled', type=boolean_string, help='Use the grid world model with coupled transitions', default=False, required=False)
     parser.add_argument('--learning_method', type=LearningMethod, help='The learning method to be used for approximating the transition probabilities', default=LearningMethod.bayesian, required=False, choices=list(LearningMethod))
     parser.add_argument('--nr_of_traces', type=int, help='an integer for the number of traces created by the simulator', default=10, required=False)
     parser.add_argument('--trace_length', type=int, help='an integer for the length of traces created by the simulator', default=50, required=False)
     parser.add_argument('--reachability_formula', type=str, help='The reachability formula', default='P=? [X "a"]', required=False)
 
     args = vars(parser.parse_args())
+    
+    print(args)
 
     # Map command line arguments to function arguments.
     run(*args.values())
