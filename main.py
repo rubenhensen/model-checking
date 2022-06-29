@@ -22,11 +22,8 @@ def reachability_probability(dtmc):
 
 
 prism_model_path = "prism_models/grid_5x5.prism"
-(original_prism_program, transitions) = grid_simulator_deterministic(50, 100, prism_model_path) # Writes to file, uncomment to generate new file
+(original_prism_program, transitions) = grid_simulator_deterministic(500, 1000, prism_model_path) # Writes to file, uncomment to generate new file
 
-
-# state_labeling = stormpy.storage.StateLabeling(5)
-# state_labeling.add_label_to_state('a', 1)
 
 # original_properties = stormpy.parse_properties(formula_str, original_prism_program)
 # original_model = stormpy.build_model(original_prism_program, original_properties)
@@ -37,16 +34,16 @@ prism_model_path = "prism_models/grid_5x5.prism"
 
 # print(f"Result original model: {original_result}")
 
-(coupled, traces) = grid_parse("export_simulator.txt") 
+(variables, coupled, traces) = grid_parse("export_simulator.txt") 
 
 # approx0 = frequentist(traces)
-# approx1 = frequentist_coupled(coupled, traces)
+approx1 = frequentist_coupled(coupled, traces)
 # approx2 = bayesian_iter([], traces)
-approx3 = bayesian_iter(coupled, traces, transitions)
+# approx3 = bayesian_iter(coupled, traces, transitions)
 
-print(approx3)
+print(approx1)
 
 # print(f"Frequentist: {formula_str} {reachability_probability(generate_model(approx0))}")
 # print(f"Frequentist coupled: {formula_str} {reachability_probability(generate_model(approx1))}")
 # print(f"Bayesian: {formula_str} {reachability_probability(generate_model(approx2))}")
-print(f"Bayesian coupled: {formula_str} {reachability_probability(generate_model2(approx3, prism_model_path))}")
+print(f"Bayesian coupled: {formula_str} {reachability_probability(generate_model2(approx1, prism_model_path, variables))}")

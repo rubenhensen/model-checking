@@ -24,13 +24,14 @@ def frequentist_coupled(coupled,traces):
 
         coupled_summed.append((l, sum_states,sum_trans))
 
-    # print(coupled_summed)
+    print("coupled_summed")
+    print(coupled_summed)
     approx = {}
     # # Calculate the approximation by dividing the transition by the total. (st1->st2) / st1 
 
     for i, l in enumerate(coupled):
         for trans in l:
-            probability = round(coupled_summed[i][2] / coupled_summed[i][1],2)
+            probability = 0 if coupled_summed[i][2] == coupled_summed[i][1] == 0 else round(coupled_summed[i][2] / coupled_summed[i][1],2)
             approx.update({l:probability})
     
     # for a in approx:

@@ -50,16 +50,23 @@ def generate_model(model):
 
     return dtmc
 
-def generate_model2(model_dict, path):
+def generate_model2(model_dict, path, variables):
     prism_program1 = stormpy.parse_prism_program(path)  # type: ignore
     valuation = ""
     regex = r'\(([a-z]+)\)\/\(1\)'
+    valuated_variables = []
     
     for key in model_dict:
         compiled_regex = re.compile(regex)
         if (compiled_regex.search(key)):
             variable = re.search(regex, key).group(1)
-            valuation = valuation + str(variable) + "=" + str(model_dict[key]) + ","
+            valuated_variables.append(variable)
+            valuation = valuation + variable + "=" + str(model_dict[key]) + ","
+
+    unvaluated_variables = list(set(variables) - set(valuated_variables))
+
+    for var in unvaluated_variables:
+        valuation = valuation + var + "=0,"
 
     valuation = valuation[0:len(valuation) - 1] #remove last comma
     print(valuation)

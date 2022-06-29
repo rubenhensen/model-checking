@@ -87,3 +87,5 @@ module main
    [] x=4 & y=4 -> a : (x'=3) + (1 - a) : (y'=3);
 
 endmodule
+
+label "a" = x=0&y=1;

@@ -5,6 +5,8 @@ def grid_parse(file_path):
 
     data = json.load(f)
 
+    variables = data['variables']
+
     coupled = data['coupled']
 
     paths = data['paths']
@@ -16,7 +18,7 @@ def grid_parse(file_path):
                 break 
             tracelist.append((int(state),int(trace[id+1])))
         transitions.append(tracelist)
-    return (coupled, transitions)
+    return (variables, coupled, transitions)
 
 
 if __name__ == '__main__':
