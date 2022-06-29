@@ -1,12 +1,9 @@
 from grid_simulator_deterministic import grid_simulator_deterministic
 from parse import grid_parse
 
-def bayesian_iter(coupled, traces):
+def bayesian_iter(coupled, traces, transitions):
     #print(coupled)
     #print(traces)
-
-    # Get all unique visited transitions using set comprehension
-    transitions = {(state1, state2) for (state1, state2) in [item for sublist in traces for item in sublist]}
 
     alphas = dict()
     prior = 2

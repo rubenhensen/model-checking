@@ -23,6 +23,10 @@ def grid_simulator_deterministic(nr_traces, len_traces):
     model = stormpy.build_sparse_model_with_options(prism_program, options)
     model2 = stormpy.build_sparse_parametric_model_with_options(prism_program1, options)
 
+    # All transitions of the model
+    transitions = []
+    # Transitions that are coupled. The transition label is the key,
+    # the value if the list of pairs of states which represent coupled transitions.
     coupled_transitions = {}
     print("model")
     print(model)
@@ -31,6 +35,8 @@ def grid_simulator_deterministic(nr_traces, len_traces):
     for state in model2.states:
         for action in state.actions:
             for transition in action.transitions:
+                transitions.append((int(state), transition.column))
+
                 probability = str(transition.value())
                 # print(probability)
 
@@ -74,7 +80,7 @@ def grid_simulator_deterministic(nr_traces, len_traces):
     with open("export_simulator.txt", 'w') as outfile:
         json.dump(jsonobj, outfile, indent=4, separators=(',', ':'))
 
-    return prism_program
+    return (prism_program, transitions)
 
 
 if __name__ == '__main__':
