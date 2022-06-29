@@ -8,35 +8,36 @@ from bayesian import bayesian_iter
 import stormpy
 import sys
 
-def run(prism_file_path, trace_length, nr_of_traces, reachability_predicate = 'P=? [X "a"]'):
+def run(use_coupled, trace_length, nr_of_traces, reachability_predicate = 'P=? [X "a"]'):
+    prism_file_path = "prism_models/grid_5x5.prism"
 
-    (original_prism_program, transitions) = grid_simulator_deterministic(nr_of_traces, trace_length, prism_file_path) # Writes to file, uncomment to generate new file
+    if bool(use_coupled):
+        prism_file_path = "prism_models/grid_5x5_coupled.prism"
 
-    # original_properties = stormpy.parse_properties(reachability_predicate, original_prism_program)
-    # original_model = stormpy.build_model(original_prism_program, original_properties)
-    # original_result = stormpy.model_checking(original_model,original_properties[0])
+    (original_prism_program, transitions) = grid_simulator_deterministic(int(nr_of_traces), int(trace_length), prism_file_path) # Writes to file, uncomment to generate new file
 
-    # filter = stormpy.create_filter_initial_states_sparse(original_model)
-    # original_result.filter(filter)
+    # Calculate eachability probability on original model
+    original_properties = stormpy.parse_properties(reachability_predicate, original_prism_program)
+    original_model = stormpy.build_symbolic_model(original_prism_program, original_properties)
+    original_result = stormpy.model_checking(original_model,original_properties[0])
+    original_filter = stormpy.create_filter_initial_states_symbolic(original_model)
+    original_result.filter(original_filter)
 
-    # print(f"Result original model: {original_result}")
+    print(f"Result original model: {original_result}")
 
+    # calculate reachability probability on approximated model using useer defined configuration
     (variables, coupled, traces) = grid_parse("export_simulator.txt") 
 
     # approx0 = frequentist(traces)
     approx1 = frequentist_coupled(coupled, traces)
+    print(approx1)
     # approx2 = bayesian_iter([], traces)
     # approx3 = bayesian_iter(coupled, traces, transitions)
 
-    print(approx1)
-
-    # print(f"Frequentist: {reachability_predicate} {reachability_probability(generate_model(approx0))}")
-    # print(f"Frequentist coupled: {reachability_predicate} {reachability_probability(generate_model(approx1))}")
-    # print(f"Bayesian: {reachability_predicate} {reachability_probability(generate_model(approx2))}")
-    print(f"Bayesian coupled: {reachability_predicate} {reachability_probability(generate_model2(approx1, prism_file_path, variables))}")
+    print(f"Bayesian coupled: {reachability_predicate} {reachability_probability(generate_model2(approx1, prism_file_path, variables), reachability_predicate)}")
 
 # Return the result of checking the formula string reachability
-def reachability_probability(dtmc):
+def reachability_probability(dtmc, reachability_predicate):
     properties = stormpy.parse_properties(reachability_predicate)
 
     result = stormpy.model_checking(dtmc,properties[0])
