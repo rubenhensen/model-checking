@@ -1,5 +1,6 @@
 import stormpy
 from transition import Transition
+import re
 
 #State(x: 0, y: 4) 0.49 --> State(x: 0, y: 3)
 #print(f"{a[0]} {round(approx[a], 2)} --> {str(a[1])}")
@@ -48,3 +49,39 @@ def generate_model(model):
     dtmc = stormpy.storage.SparseDtmc(components)
 
     return dtmc
+
+def generate_model2(model_dict, path):
+    prism_program1 = stormpy.parse_prism_program(path)  # type: ignore
+    valuation = ""
+    regex = r'\(([a-z]+)\)\/\(1\)'
+    
+    for key in model_dict:
+        compiled_regex = re.compile(regex)
+        if (compiled_regex.search(key)):
+            variable = re.search(regex, key).group(1)
+            valuation = valuation + str(variable) + "=" + str(model_dict[key]) + ","
+
+    valuation = valuation[0:len(valuation) - 1] #remove last comma
+    print(valuation)
+
+    prism_program = stormpy.preprocess_symbolic_input(prism_program1, [], valuation)[0].as_prism_program()
+
+    options = stormpy.BuilderOptions()
+    options.set_build_state_valuations()
+    options.set_build_choice_labels(True)
+    # parameters = model.collect_probability_parameters()
+    model = stormpy.build_sparse_model_with_options(prism_program, options)
+    print("Approximated model")
+    print(model)
+
+    return model
+
+    # prism_program = stormpy.preprocess_symbolic_input(prism_program1, [], valuation)[0].as_prism_program()
+    # options = stormpy.BuilderOptions()
+    # options.set_build_state_valuations()
+    # options.set_build_choice_labels(True)
+    # # parameters = model.collect_probability_parameters()
+    # model = stormpy.build_sparse_model_with_options(prism_program, options)
+
+    # print("model")
+    # print(model)
