@@ -9,9 +9,9 @@ We strongly advice to run the experiment inside the Docker envrionment, provided
 
 ## Usage
 
-The `prism_models` directory contains two examples of a 5x5 grid world. `grid_5x5_coupled.prism` contains the model in which certain states are coupled. These are the **corner states** (e.g. `x=0&y=0`) which have only two outgoing transitions, the **edge state** (e.g. `x=0&y=1`) which are the non-corner states located at the edge of the rid and have three outgoing transitions, and the **center states** which are all other states and have four outgoing transitions. `grid_5x5.prism` contains the model in which no states are coupled.
+The `prism_models` directory contains two examples of a 5x5 grid world. `grid_5x5_coupled.prism` contains the model in which certain states are coupled. These are the **corner states** (e.g. `x=0&y=0`) which have only two outgoing transitions, the **edge state** (e.g. `x=0&y=1`) which are the non-corner states located at the edge of the grid and have three outgoing transitions, and the **center states** which are all other states and have four outgoing transitions. `grid_5x5.prism` contains the model in which no states are coupled.
 
-A call to main with the help flag, `python main.py -h` gives the following information about running the script:
+A call to main with the help flag, `python main.py -h`, gives the following information about running the script:
 ```
 Probability learner for DTMC
 
@@ -28,8 +28,8 @@ optional arguments:
                         The reachability formula
 ```
 
-This shows how the demo can be ran. Every option has a default value as well: `coupled` is `False` by default, `learning_method` is `bayesian` by default, `nr_of_traces` is 10 by default, `trace_length` is 50 by default and the `reachability_formula` is `P=? [X "a"]` by default.
+This shows how the demo can be ran. Every option has a default value as well: `coupled` is `False` by default, `learning_method` is `bayesian` by default, `nr_of_traces` is `10` by default, `trace_length` is `50` by default and the `reachability_formula` is `P=? [X "a"]` by default.
 
-An example of running an experiment using the frequentist approach, coupled transitions, 10 simulator traces of length 50 and comparing the probability of reaching next state were `a` holds can be done using the command
+An example of running an experiment using the frequentist approach, coupled transitions, 10 simulator traces of length 50 and comparing the probability of reaching the next state were `a` holds can be done using the command:
 
 `python main.py --coupled True --learning_method frequentist --nr_of_traces 10 --trace_length 50 --reachability_formula 'P=? [X "a"]'`
